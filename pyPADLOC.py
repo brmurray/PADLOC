@@ -11,8 +11,9 @@ Versions:
 
 #from importlib import reload  
 
-#import serial
-import calendar, datetime
+import serial
+import datetime
+import calendar
 
 def introduce():
     print("""
@@ -42,7 +43,7 @@ def parse(input):
     elif input==r'$WERTM':
         print("Got time request")
         dt = datetime.datetime.utcnow()
-        posix = calendar.timegm(dt.timetuple())
+        #posix = calendar.timegm(dt.timetuple())
         
         reply = dt.strftime("%Y%m%d%H%M%S") + "{WecStatus 20 characters}\r\n"
         print(r"reply = " + reply)
@@ -57,3 +58,11 @@ def parse(input):
 def getStatusMsg():
     '''Request status from higher level controller'''
     
+def startSerial():
+    """Open serial port and start listening"""
+    ser=serial.Serial('COM9')
+    print("COM Port=" + ser.name)
+    return ser
+    
+def listen(ser):
+    parse(ser.readline()) # read up a to /n (EOL), send to parse()
